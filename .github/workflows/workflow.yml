@@ -62,9 +62,10 @@ jobs:
 
       - name: create db connection string
         run: |
+          ENCODED_SQLADMIN_LOGIN=$(echo ${{ secrets.SQLADMIN_LOGIN }} | sed 's/@/%40/g')
           CONN_STR=$(az sql db show-connection-string --client ado.net --server ${{ env.SQLSERVER_NAME }} --name ${{ env.DATABASE_NAME }} -o tsv)
-          CONN_STR=$(echo $CONN_STR | sed "s/<username>/${{ env.SQLADMIN_LOGIN }}/g")
-          CONN_STR=$(echo $CONN_STR | sed "s/<password>/${{ env.SQLADMIN_PASS }}/g")
+          CONN_STR=$(echo $CONN_STR | sed "s/<username>/$ENCODED_SQLADMIN_LOGIN/g")
+          CONN_STR=$(echo $CONN_STR | sed "s/<password>/${{ secrets.SQLADMIN_PASS }}/g")
           echo "SQL_DB_CONN_STR=$CONN_STR" >> $GITHUB_ENV
 
       - name: Update Database
