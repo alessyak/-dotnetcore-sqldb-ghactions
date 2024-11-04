@@ -68,7 +68,9 @@ jobs:
           CONN_STR=$(echo $CONN_STR | sed "s/<username>/$ENCODED_SQLADMIN_LOGIN/g")
           CONN_STR=$(echo $CONN_STR | sed "s/<password>/${{ secrets.SQLADMIN_PASS }}/g")
           echo "SQL_DB_CONN_STR=$CONN_STR" >> $GITHUB_ENV
-          echo ${{ env.SQL_DB_CONN_STR }}
+
+      - name: Print connection string (without password)
+        run: echo "${{ env.SQL_DB_CONN_STR }}"
 
       - name: Update Database
         run: |
